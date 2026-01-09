@@ -8,6 +8,7 @@ urlpatterns = [
     path('token/refresh/', TokenRefreshView.as_view()),
     path('profile/', views.UserProfileView.as_view()),
     path('change-password/', views.ChangePasswordView.as_view()),
+    path('form-create/', views.CreateDynamicFormView.as_view())
 ]
 
 

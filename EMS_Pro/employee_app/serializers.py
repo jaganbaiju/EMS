@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
+from .models import DynamicFormModel
 
 
 class UserRegisterSerializer(serializers.ModelSerializer):
@@ -18,3 +19,20 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         )
 
         return user
+    
+
+class DynamicFormSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DynamicFormModel
+        field = ['name']
+
+
+    def create(self, validated_data):
+        user = self.context['request'].user
+
+        dynamicForm = DynamicFormModel.objects.create(
+            name=validated_data['name'],
+            created_by=user
+        )
+
+        return dynamicForm

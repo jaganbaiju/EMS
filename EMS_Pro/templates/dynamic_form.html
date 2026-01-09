@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div class="dynamic-form">
+        <p>IF you are going to create new form create form name :- </p>
+        <input type="text" id="dynamicFormName" placeholder="Enter Form Name"> <br><br>
+        <button onclick="oncreateDymanicForm()">create</button>
+    </div>
+
+
+    <script>
+        function oncreateDymanicForm() {
+            fetch("http://127.0.0.1:8000/api/form-create/", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + localStorage.getItem("access")
+                },
+                body: JSON.stringify({
+                    form_name: document.getElementById("dynamicFormName").value
+                })
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.error) {
+                        alert(data.error);
+                    } else {
+                        alert(data.message);
+                    }
+                })
+                .catch(err => alert(err));
+        }
+    </script>
+</body>
+
+</html>

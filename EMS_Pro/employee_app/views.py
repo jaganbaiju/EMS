@@ -4,6 +4,7 @@ from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth.models import User
 from .serializers import UserRegisterSerializer
 from rest_framework import status
+from .models import DynamicFormModel
 
 
 # api for register user
@@ -56,3 +57,26 @@ class ChangePasswordView(APIView):
         user.save()
 
         return Response({"message": "Password changed successfully"})
+    
+
+# create dynamic form
+class CreateDynamicFormView(APIView):
+
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        user = request.user
+
+        form_name = request.data.get('form_name')
+
+        if not form_name:
+            return Response({"error": "Form name is required"}, status=400)
+
+        dynamic_form = DynamicFormModel.objects.create(
+            name=form_name,
+            created_by = user
+        )
+
+        dynamic_form.save()
+
+        return Response({"message": "Dynamic form Created"})
