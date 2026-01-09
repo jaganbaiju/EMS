@@ -1,39 +1,79 @@
 <!DOCTYPE html>
+{% load static %}
 <html>
+
 <head>
     <title>Profile</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+        crossorigin="anonymous"></script> -->
 </head>
+
 <body>
+    <div class="profile-main row">
+        <div class="profile-head">
+            <h1>
+                Employee Management System
+            </h1>
+            <h2>User Profile</h2>
+        </div>
+        
+        <div class="profile-sub2 col-md-9">
+            <div class="prsonal-details-div">
+                <div class="profile-div">
+                    <p class="profile-name"></p>
+                </div>
+                <h3 class="username"></h3>
+                <h4 class="email"></h4>
+            </div>
+        </div>
 
-<h2>User Profile</h2>
-<button onclick="getProfile()">Load Profile</button>
+        <div class="profile-sub1 col-md-3">
+            <!-- logout -->
+            <a href="#" onclick="logOut()">logout</a><br>
 
-<pre id="output"></pre>
+            <!-- change password link -->
+            <a href="{% url 'change_password' %}">change password</a>
+        </div>
+    </div>
 
-<!-- logout -->
-<button onclick="logOut()">logout</button>
-<script>
-function getProfile() {
-    fetch("http://127.0.0.1:8000/api/profile/", {
-        headers: {
-            "Authorization": "Bearer " + localStorage.getItem("access")
+    <script>
+        // check access
+        if (!localStorage.getItem("access")) {
+
+            const loginUrl = "{% url 'login' %}";
+            window.location.href = loginUrl;
         }
-    })
-    .then(res => res.json())
-    .then(data => {
-        document.getElementById("output").innerText =
-            JSON.stringify(data, null, 2);
-    });
-}
 
-function logOut() {
-    localStorage.removeItem("access");
-    localStorage.removeItem("refresh");
 
-    const loginUrl = "{% url 'login' %}";
-    window.location.href = loginUrl;
-}
-</script>
+
+        fetch("http://127.0.0.1:8000/api/profile/", {
+            headers: {
+                "Authorization": "Bearer " + localStorage.getItem("access")
+            }
+        })
+            .then(res => res.json())
+            .then(data => {
+                document.getElementsByClassName('username')[0].innerHTML = data.username.toUpperCase();
+                document.getElementsByClassName('email')[0].innerHTML = data.email;
+                document.getElementsByClassName('profile-name')[0].innerHTML = data.username[0].toUpperCase();
+            });
+
+
+        function logOut() {
+            localStorage.removeItem("access");
+            localStorage.removeItem("refresh");
+
+            const loginUrl = "{% url 'login' %}";
+            window.location.href = loginUrl;
+        }
+
+
+    </script>
 
 </body>
+
 </html>

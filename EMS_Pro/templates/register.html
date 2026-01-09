@@ -1,41 +1,121 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register-Page</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 
 <body>
 
-    <h2>Register </h2>
-
-    <input type="text" id="username" placeholder="username"><br><br>
-    <input type="email" id="email" placeholder="Username"><br><br>
-    <input type="password" id="password" placeholder="Password"><br><br>
-    <button onclick="register()">Register</button>
-
+    <div class="reg-main">
+        <div class="reg-sub">
+            <div class="reg-form-div">
+                <h2>Register </h2><br>
+                <input type="text" id="username" placeholder="username"><br><br>
+                <p id="err1"></p>
+                <input type="email" id="email" placeholder="Email"><br><br>
+                <p id="err2"></p>
+                <input type="password" id="password" placeholder="Password"><br><br>
+                <p id="err3"></p>
+                <input type="password" id="cpassword" placeholder="Confirm Password"><br><br>
+                <p id="err4"></p>
+                <button onclick="register()">Register</button><br><br>
+                <p>Have an account? <a href="#" onclick="goToLogin()">Log in</a> </p>
+            </div>
+        </div>
+    </div>
 
     <script>
+        let err1 = document.getElementById('err1');
+        let err2 = document.getElementById('err2');
+        let err3 = document.getElementById('err3');
+        let err4 = document.getElementById('err4');
+
         function register() {
-            fetch("http://127.0.0.1:8000/api/register/", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    username: document.getElementById('username').value,
-                    email: document.getElementById('email').value,
-                    password: document.getElementById('password').value
-                })
-            })
-                .then(res => res.json())
-                .then(data => {
-                    const loginUrl = "{% url 'login' %}";
-                    window.location.href = loginUrl;
-                })
-                .catch(err => alert(err));
+            let password = document.getElementById('password').value;
+            let cpassword = document.getElementById('cpassword').value;
+            let username = document.getElementById('username').value;
+            let email = document.getElementById('email').value;
+
+            is_valid = true;
+
+            if (username === "") {
+                err1.style.display = "block";
+                err1.innerHTML = "Username required";
+                is_valid = false;
+            }
+            else {
+                err1.style.display = "none";
+                err1.innerHTML = "";
+            }
+
+            if (email === "") {
+                err2.style.display = "block";
+                err2.innerHTML = "Email required";
+                is_valid = false;
+            }
+            else {
+                err2.style.display = "none";
+                err2.innerHTML = "";
+            }
+
+            if (password === "") {
+                err3.style.display = "block";
+                err3.innerHTML = "Password required";
+                is_valid = false;
+            }
+            else {
+                err3.style.display = "none";
+                err3.innerHTML = "";
+            }
+
+            if (cpassword === "") {
+                err4.style.display = "block";
+                err4.innerHTML = "Confirm Password required";
+                is_valid = false;
+            }
+            else {
+                err4.style.display = "none";
+                err4.innerHTML = "";
+            }
+
+            if (is_valid == true) {
+                if (password === cpassword) {
+                    fetch("http://127.0.0.1:8000/api/register/", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            username: document.getElementById('username').value,
+                            email: document.getElementById('email').value,
+                            password: document.getElementById('password').value
+                        })
+                    })
+                        .then(res => res.json())
+                        .then(data => {
+                            const loginUrl = "{% url 'login' %}";
+                            window.location.href = loginUrl;
+                        })
+                        .catch(err => alert(err));
+                }
+                else {
+                    alert("Password not matching");
+                }
+
+            }
+            else {
+                return;
+            }
+        }
+
+        function goToLogin() {
+            const loginUrl = "{% url 'login' %}";
+            window.location.href = loginUrl;
         }
     </script>
 </body>

@@ -1,0 +1,114 @@
+/* LOGIN PAGE    */
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+.login-main,
+.reg-main {
+    height: 100vh;
+    width: 100%;
+    background-image: linear-gradient(to bottom, rgb(242, 170, 170), rgb(130, 89, 125));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+}
+
+.login-sub {
+    width: 50vw;
+    height: 60vh;
+    background-color: rgba(125, 248, 3, 0.71);
+    border-radius: 20vh 0;
+    display: flex;
+    align-items: center;
+    padding: 10vh;
+}
+
+.login-form-div,
+.reg-form-div {
+    width: 100%;
+    text-align: center;
+}
+
+.login-form-div > input,
+.reg-form-div > input {
+    width: 60%;
+    height: 7vh;
+    border-radius: 30px;
+    border: none;
+    outline: none;
+    padding: 0 5vh;
+}
+
+.login-form-div > button,
+.reg-form-div > button {
+    padding: 1vh 8vh;
+    border-radius: 30px;
+    border: none;
+    background-color: rgb(247, 218, 168);
+    cursor: pointer;
+    color: rgb(115, 112, 109);
+}
+
+/* REGISTER PAGE */
+
+.reg-sub {
+    width: 50vw;
+    height: fit-content;
+    background-color: rgba(125, 248, 3, 0.71);
+    border-radius: 20vh 0;
+    display: flex;
+    align-items: center;
+    padding: 5vh;
+}
+
+#err1,
+#err3,
+#err2,
+#err4 {
+    display: none;
+    color: red;
+}
+
+
+/* PROFILE PAGE */
+
+.profile-main {
+    height: 100vh;
+    width: 100%;
+    background-image: linear-gradient(to bottom, rgb(242, 170, 170), rgb(130, 89, 125));
+    padding: 10vh;
+}
+
+.profile-head {
+    margin-bottom: 5vh;
+}
+
+.profile-div {
+    width: 20vh;
+    height: 20vh;
+    background-image:  linear-gradient(to bottom, rgb(170, 196, 242), rgb(154, 43, 209));;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    margin: 3vh 0;
+}
+
+.profile-name {
+    font-size: xxx-large;
+    font-weight: bolder;
+    color: white;
+}
+
+.profile-sub1 {
+    margin-top: 5vh;
+    line-height: 20px;
+}
+
+.profile-sub1 > a {
+    text-decoration: none;
+    color: white;
+}

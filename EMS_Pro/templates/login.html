@@ -1,41 +1,61 @@
 <!DOCTYPE html>
+{% load static %}
 <html>
+
 <head>
     <title>JWT Login</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
+
 <body>
+    <div class="login-main">
+        <div class="login-sub">
+            <div class="login-form-div">
+                <h2 class="login-head">Login</h2><br><br>
+                <input type="text" id="username" placeholder="Username"><br><br>
+                <input type="password" id="password" placeholder="Password"><br><br>
+                <button onclick="login()">Login</button><br><br>
+                <p>Don't have an account? <a href="#" onclick="goToRegister()">Sign up</a></p>
+            </div>
+        </div>
+    </div>
 
-<h2>Login</h2>
+    <script>
+        function login() {
+            fetch("http://127.0.0.1:8000/api/login/", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    username: document.getElementById("username").value,
+                    password: document.getElementById("password").value
+                })
+            })
+                .then(res => res.json())
+                .then(data => {
 
-<input type="text" id="username" placeholder="Username"><br><br>
-<input type="password" id="password" placeholder="Password"><br><br>
-<button onclick="login()">Login</button>
+                    if (!data.access) {
+                        alert(data.detail || "Invalid username or password");
+                        return;
+                    }
 
-<script>
-function login() {
-    fetch("http://127.0.0.1:8000/api/login/", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            username: document.getElementById("username").value,
-            password: document.getElementById("password").value
-        })
-    })
-    .then(res => res.json())
-    .then(data => {
-        
-        localStorage.setItem("access", data.access);
-        localStorage.setItem("refresh", data.refresh);
-        alert("Login Successful");
+                    localStorage.setItem("access", data.access);
+                    localStorage.setItem("refresh", data.refresh);
+                    alert("Login Successful");
 
-        const profileUrl = "{% url 'profile' %}";
-        window.location.href = profileUrl;
-    })
-    .catch(err => alert(err));
-}
-</script>
+                    const profileUrl = "{% url 'profile' %}";
+                    window.location.href = profileUrl;
+                })
+                .catch(err => alert(err));
+        }
+
+        function goToRegister() {
+            const registerUrl = "{% url 'register' %}";
+            window.location.href = registerUrl;
+        }
+    </script>
 
 </body>
+
 </html>

@@ -17,6 +17,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.views.generic import TemplateView
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -25,5 +27,12 @@ urlpatterns = [
     # Frontend pages
     path('', TemplateView.as_view(template_name="login.html"), name="login"),
     path('profile-page/', TemplateView.as_view(template_name="profile.html"), name="profile"),
-    path('user-register/', TemplateView.as_view(template_name="register.html"), name='register')
+    path('user-register/', TemplateView.as_view(template_name="register.html"), name='register'),
+    path('set-new-password/', TemplateView.as_view(template_name="change_password.html"), name="change_password"),
 ]
+
+
+if settings.DEBUG:
+
+    urlpatterns += static(settings.STATIC_URL,
+                          document_root=settings.STATIC_ROOT)
