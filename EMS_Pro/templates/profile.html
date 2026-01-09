@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Profile</title>
+</head>
+<body>
+
+<h2>User Profile</h2>
+<button onclick="getProfile()">Load Profile</button>
+
+<pre id="output"></pre>
+
+<!-- logout -->
+<button onclick="logOut()">logout</button>
+<script>
+function getProfile() {
+    fetch("http://127.0.0.1:8000/api/profile/", {
+        headers: {
+            "Authorization": "Bearer " + localStorage.getItem("access")
+        }
+    })
+    .then(res => res.json())
+    .then(data => {
+        document.getElementById("output").innerText =
+            JSON.stringify(data, null, 2);
+    });
+}
+
+function logOut() {
+    localStorage.removeItem("access");
+    localStorage.removeItem("refresh");
+
+    const loginUrl = "{% url 'login' %}";
+    window.location.href = loginUrl;
+}
+</script>
+
+</body>
+</html>

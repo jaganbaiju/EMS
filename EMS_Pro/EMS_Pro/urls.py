@@ -16,8 +16,14 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.views.generic import TemplateView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('employee_app.urls'))
+    path('api/', include('employee_app.urls')),
+
+    # Frontend pages
+    path('', TemplateView.as_view(template_name="login.html"), name="login"),
+    path('profile-page/', TemplateView.as_view(template_name="profile.html"), name="profile"),
+    path('user-register/', TemplateView.as_view(template_name="register.html"), name='register')
 ]
