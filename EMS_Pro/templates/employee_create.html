@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <h2>Create Employee details</h2>
+
+    <div>
+        <select id="employeeName" onchange="getDynamicForm(this.value)">
+            <option value="">-- Select User --</option>
+            {% for usr in all_users %}
+            <option value="{{usr.id}}">{{usr.username}}</option>
+            {% endfor %}
+        </select><br>
+
+        <select id="dynamic-froms" onchange="getFormDetils(this.value)">
+
+        </select>
+
+        <div id="form">
+
+        </div>
+    </div>
+
+
+
+    <script>
+
+        const API_URL = "http://127.0.0.1:8000/api/employee/";
+        const FIELD_API = "http://127.0.0.1:8000/api/form-field/";
+        const token = localStorage.getItem("access");
+
+        function getDynamicForm(userId) {
+            if (!userId) return;
+
+            fetch(`${API_URL}?id=${userId}`, {
+                headers: {
+                    "Authorization": "Bearer " + token
+                }
+            })
+                .then(res => res.json())
+                .then(data => {
+                    const dynamicForm = document.getElementById("dynamic-froms");
+                    dynamicForm.innerHTML = "<option>Select Form</option>";
+
+                    // Example: render form names
+                    data.forEach(form => {
+                        const opt = document.createElement("option");
+                        opt.value = form.name;
+                        opt.textContent = form.name;
+                        dynamicForm.appendChild(opt);
+                    });
+                })
+                .catch(err => alert(err));
+        }
+
+        function getFormDetils(formName) {
+            if (!formName) return;
+
+            fetch(`${FIELD_API}?form=${formName}`, {
+                headers: {
+                    "Authorization": "Bearer " + token
+                }
+            })
+                .then(res => res.json())
+                .then(data => {
+                    const mainForm = document.getElementById('form');
+                    mainForm.innerHTML = "";
+
+                    data.forEach(field => {
+                        const intputTag = document.createElement('input');
+                        const label = document.createElement('label');
+                        const brealTag = document.createElement('br');
+                        label.textContent = field.label;
+                        intputTag.type = field.field_type;
+                        intputTag.id = field.order;
+                        mainForm.appendChild(label);
+                        mainForm.appendChild(brealTag);
+                        mainForm.appendChild(intputTag);
+                        mainForm.appendChild(brealTag);
+                    });
+
+                    const submitBtn = document.createElement('button');
+                    submitBtn.type = "button";
+                    submitBtn.textContent = "Save";
+                    submitBtn.onclick = submitEmployee;
+
+                    mainForm.appendChild(submitBtn);
+                })
+                .catch(err => alert(err));
+        }
+
+
+        function submitEmployee() {
+            const inputs = document.querySelectorAll("#form input");
+            let formData = {};
+
+            inputs.forEach(input => {
+                formData[input.name] = input.value;
+            });
+
+            fetch(API_URL, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + token
+                },
+                body: JSON.stringify({
+                    form: document.getElementById('dynamic-froms').value,
+                    data: formData
+                })
+            })
+                .then(res => res.json())
+                .then(data => {
+                    alert(data);
+                })
+                .catch(err => alert(err));
+        }
+
+
+    </script>
+</body>
+
+</html>

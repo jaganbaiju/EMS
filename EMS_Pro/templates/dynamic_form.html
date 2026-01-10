@@ -14,29 +14,156 @@
         <button onclick="oncreateDymanicForm()">create</button>
     </div>
 
+    <div>
+        <p>If you are going add to previous form select :</p>
+        <select id="dropdown" onchange="getFormDetils(this.value)">
+
+        </select>
+    </div>
+
+    <div>
+        <h4 class="dynamic-form-head">Forms</h4>
+        <div id="form">
+
+        </div>
+    </div>
+
+    <div class="create-field">
+        <input type="text" id="label" placeholder="enter the label">
+
+        <select id="field-type">
+            <option>Select Form</option>
+            <option value="text">text</option>
+            <option value="number">number</option>
+            <option value="email">email</option>
+            <option value="date">date</option>
+            <option value="password">password</option>
+        </select>
+
+        <button onclick="addFields()">Add Field</button>
+    </div>
+
 
     <script>
+
+        const API_URL = "http://127.0.0.1:8000/api/form-create/";
+        const FIELD_API = "http://127.0.0.1:8000/api/form-field/";
+        const token = localStorage.getItem("access");
+
+
+        function loadForms() {
+            fetch(API_URL, {
+                headers: {
+                    "Authorization": "Bearer " + token
+                }
+            })
+                .then(res => res.json())
+                .then(data => {
+                    const dropdown = document.getElementById("dropdown");
+                    dropdown.innerHTML = "<option>Select Form</option>";
+
+                    data.all_forms.forEach(form => {
+                        const opt = document.createElement("option");
+                        opt.value = form.name;
+                        opt.textContent = form.name;
+                        dropdown.appendChild(opt);
+                    });
+                });
+        }
+
+
         function oncreateDymanicForm() {
-            fetch("http://127.0.0.1:8000/api/form-create/", {
+            const formName = document.getElementById("dynamicFormName").value;
+
+            if (!formName) {
+                alert("Form name is required");
+                return;
+            }
+
+            fetch(API_URL, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    "Authorization": "Bearer " + localStorage.getItem("access")
+                    "Authorization": "Bearer " + token
+                },
+                body: JSON.stringify({ name: formName })
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.message) {
+                        alert(data.message);
+                        location.reload(); // reload to update dropdown
+                    } else {
+                        alert(JSON.stringify(data));
+                    }
+                })
+                .catch(err => alert("Error: " + err));
+        }
+
+
+        function addFields() {
+            const formName = document.getElementById("dropdown").value;
+            const label = document.getElementById("label").value.trim();
+            const fieldType = document.getElementById("field-type").value;
+
+            // if (!formId || !label) {
+            //     alert("Select form and enter field label");
+            //     return;
+            // }
+
+            fetch(FIELD_API, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + token
                 },
                 body: JSON.stringify({
-                    form_name: document.getElementById("dynamicFormName").value
+                    form: formName,
+                    label: label,
+                    field_type: fieldType
                 })
             })
                 .then(res => res.json())
                 .then(data => {
-                    if (data.error) {
-                        alert(data.error);
-                    } else {
+                    if (data.message) {
                         alert(data.message);
+                    } else {
+                        alert(JSON.stringify(data));
                     }
                 })
                 .catch(err => alert(err));
+
         }
+
+        function getFormDetils(formName) {
+            if (!formName) return;
+
+            fetch(`${FIELD_API}?form=${formName}`, {
+                headers: {
+                    "Authorization": "Bearer " + token
+                }
+            })
+                .then(res => res.json())
+                .then(data => {
+                    const mainForm = document.getElementById('form');
+                    mainForm.innerHTML = "";
+
+                    data.forEach(field => {
+                        const intputTag = document.createElement('input');
+                        const label = document.createElement('label');
+                        const brealTag = document.createElement('br');
+                        label.textContent = field.label;
+                        intputTag.type = field.field_type;
+                        mainForm.appendChild(label);
+                        mainForm.appendChild(brealTag);
+                        mainForm.appendChild(intputTag);
+                        mainForm.appendChild(brealTag);
+                    });
+                })
+                .catch(err => alert(err));
+        }
+
+        loadForms();
     </script>
 </body>
 

@@ -30,6 +30,7 @@ urlpatterns = [
     path('user-register/', TemplateView.as_view(template_name="register.html"), name='register'),
     path('set-new-password/', TemplateView.as_view(template_name="change_password.html"), name="change_password"),
     path('create-dynamic-form/', TemplateView.as_view(template_name="dynamic_form.html"), name='dymanicform'),
+    path('create-employee/', TemplateView.as_view(template_name="employee_create.html"), name='employee'),
 ]
 
 

@@ -2,9 +2,10 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth.models import User
-from .serializers import UserRegisterSerializer
+from .serializers import UserRegisterSerializer, DynamicFormSerializer, FormFieldSerializer, EmployeeSerializer
 from rest_framework import status
-from .models import DynamicFormModel
+from .models import DynamicFormModel, FormFieldModel, Employee
+from django.shortcuts import get_object_or_404
 
 
 # api for register user
@@ -64,19 +65,129 @@ class CreateDynamicFormView(APIView):
 
     permission_classes = [IsAuthenticated]
 
+    def get(self, request):
+        user = request.user
+        all_forms = DynamicFormModel.objects.filter(created_by=user)
+
+        serializer = DynamicFormSerializer(all_forms, many=True)
+
+        return Response({'all_forms': serializer.data})
+
     def post(self, request):
         user = request.user
 
-        form_name = request.data.get('form_name')
+        serializer = DynamicFormSerializer(data= request.data,
+                                           context={'request': request})
+        
+        if serializer.is_valid():
+            serializer.save()
 
-        if not form_name:
-            return Response({"error": "Form name is required"}, status=400)
+            return Response({"message": "Dynamic form Created"},
+                            status=status.HTTP_200_OK)
+        
+        return Response({serializer.errors},
+                        status=status.HTTP_400_BAD_REQUEST)
 
-        dynamic_form = DynamicFormModel.objects.create(
-            name=form_name,
-            created_by = user
+
+# create form field
+
+class FormFieldView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+
+        form_name = request.data.get('form')
+        form = DynamicFormModel.objects.get(name=form_name)
+
+        label = request.data.get('label')
+        field_type = request.data.get('field_type')
+
+        last_order = FormFieldModel.objects.filter(form=form).count()
+        order= last_order + 1
+
+        new_field = FormFieldModel.objects.create(
+            form = form,
+            label = label,
+            field_type = field_type,
+            order = order
         )
 
-        dynamic_form.save()
+        new_field.save()
 
-        return Response({"message": "Dynamic form Created"})
+
+        return Response(
+                {"message": "Field added successfully"},
+                status=status.HTTP_201_CREATED
+            )
+    
+
+    def get(self, request):
+        form_name = request.query_params.get('form')
+
+        if not form_name:
+            return Response(
+                {"error": "form name is required"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        form = get_object_or_404(DynamicFormModel, name=form_name)
+        fields = FormFieldModel.objects.filter(form=form).order_by('order')
+
+        serializer = FormFieldSerializer(fields, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class EmployeeCreateView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        data = request.data.copy()
+        
+        form_name = data.get('form')
+
+        if not form_name:
+            return Response(
+                {"error": "form is required"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        try:
+            form_obj = DynamicFormModel.objects.get(name=form_name)
+        except DynamicFormModel.DoesNotExist:
+            return Response(
+                {"error": "Invalid form name"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+
+        data['form'] = form_obj
+
+        serializer = EmployeeSerializer(data=data)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(
+                {
+                    "message": "Employee created successfully",
+                    "data": serializer.data
+                },
+                status=status.HTTP_201_CREATED
+            )
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def get(self, request):
+        user_id = request.query_params.get('id')
+
+        if not user_id:
+            return Response(
+                {"error": "username is required"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        user = get_object_or_404(User, id=user_id)
+
+        dynamic_forms = DynamicFormModel.objects.filter(created_by=user)
+
+        serializer = DynamicFormSerializer(dynamic_forms, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
