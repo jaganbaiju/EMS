@@ -195,3 +195,13 @@ class EmployeeCreateView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
+class UserView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def delete(self, request, user_id):
+        user = User.objects.get(id=int(user_id))
+        user.delete()
+
+        return Response({
+            "message": "User deleted successfully"
+        }, status=status.HTTP_200_OK)

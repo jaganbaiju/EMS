@@ -20,7 +20,7 @@
                     <div class="card p-3">
                         <h3>username: {{ usr.username}}</h3><br>
                         <p>email: {{usr.email}}</p>
-                        <button>delete</button><br>
+                        <button onclick="deleteUser('{{usr.id}}')">delete</button><br>
                         <button>update</button>
                     </div>
                 </div>
@@ -28,5 +28,23 @@
             </div>
         </div>
     </div>
+
+
+    <script>
+        const token = localStorage.getItem("access");
+        function deleteUser(userId) {
+            fetch(`http://127.0.0.1:8000/api/user-delete/${userId}/`, {
+                method: "DELETE",
+                headers: {
+                    "Authorization": "Bearer " + token
+                }
+            })
+            .then(res => res.json())
+            .then(data => {
+                alert(data.message);
+            })
+            .catch(err => alert(err));
+        }
+    </script>
 </body>
 </html>

@@ -10,7 +10,8 @@ urlpatterns = [
     path('change-password/', views.ChangePasswordView.as_view()),
     path('form-create/', views.CreateDynamicFormView.as_view()),
     path('form-field/', views.FormFieldView.as_view()),
-    path('employee/', views.EmployeeCreateView.as_view())
+    path('employee/', views.EmployeeCreateView.as_view()),
+    path('user-delete/<int:user_id>', views.UserView.as_view()),
 ]
 
 
