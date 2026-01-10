@@ -205,3 +205,25 @@ class UserView(APIView):
         return Response({
             "message": "User deleted successfully"
         }, status=status.HTTP_200_OK)
+
+    def get(self, request):
+        user_id = int(request.query_params.get('id'))
+        user = get_object_or_404(User, id = user_id)
+
+        return Response({
+            "id": user.id,
+            "username": user.username,
+            "email": user.email
+        }, status=status.HTTP_200_OK)
+    
+    def put(self, request):
+        user_id = int(request.query_params.get('id'))
+        user = get_object_or_404(User, id = user_id)
+
+        user.username = request.data.get('username')
+        user.email = request.data.get('email')
+
+        user.save()
+
+        return Response({"message": "user data updated"},
+                        status=status.HTTP_200_OK)

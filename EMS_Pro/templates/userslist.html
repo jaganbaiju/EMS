@@ -26,7 +26,7 @@
                         <h3>username: {{ usr.username}}</h3><br>
                         <p>email: {{usr.email}}</p>
                         <button onclick="deleteUser('{{usr.id}}')">delete</button><br>
-                        <button>update</button>
+                        <button onclick="openModal('{{usr.id}}')">update</button>
                     </div>
                 </div>
                 {% endfor %}
@@ -35,11 +35,47 @@
     </div>
 
 
+    <!-- modal -->
+
+    <!-- Modal -->
+    <div class="modal fade" id="updateModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title">Update User</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+                    <input type="hidden" id="userId">
+
+                    <div class="mb-2">
+                        <label>Username</label>
+                        <input type="text" id="username" class="form-control">
+                    </div>
+
+                    <div class="mb-2">
+                        <label>Email</label>
+                        <input type="email" id="email" class="form-control">
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button class="btn btn-success" onclick="updateUser()">Save</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
     <script>
+        const userURL = "http://127.0.0.1:8000/api/user/";
         const token = localStorage.getItem("access");
         function deleteUser(userId) {
             console.log(typeof userId);
-            fetch(`http://127.0.0.1:8000/api/user-delete/?id=${userId}`, {
+            fetch(`${userURL}?id=${userId}`, {
                 method: "DELETE",
                 headers: {
                     "Authorization": "Bearer " + token,
@@ -52,6 +88,51 @@
                     location.reload();
                 })
                 .catch(err => console.log(err));
+        }
+
+        function openModal(userId) {
+
+            fetch(`${userURL}?id=${userId}`, {
+                method: "GET",
+                headers: {
+                    "Authorization": "Bearer " + token,
+                    "Accept": "application/json"
+                }
+            })
+            .then(res => res.json())
+            .then(data => {
+                document.getElementById('userId').value = data.id;
+                document.getElementById('username').value = data.username;
+                document.getElementById('email').value = data.email;
+            })
+
+            const modal = new bootstrap.Modal(
+                document.getElementById("updateModal")
+            );
+            modal.show();
+        }
+
+        function updateUser() {
+            const userId = document.getElementById('userId').value;
+            
+            fetch(`${userURL}?id=${userId}`, {
+                method: "PUT",
+                headers: {
+                    "Authorization": "Bearer " + token,
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    username: document.getElementById('username').value,
+                    email: document.getElementById('email').value
+                })
+            })
+                .then(res => res.json())
+                .then(data => {
+                    alert(data.message);
+                    location.reload();
+                })
+                .catch(err => console.log(err));
+
         }
     </script>
 </body>
