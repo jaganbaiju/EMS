@@ -64,7 +64,7 @@
 
                     data.all_forms.forEach(form => {
                         const opt = document.createElement("option");
-                        opt.value = form.name;
+                        opt.value = form.id;
                         opt.textContent = form.name;
                         dropdown.appendChild(opt);
                     });
@@ -102,7 +102,7 @@
 
 
         function addFields() {
-            const formName = document.getElementById("dropdown").value;
+            const formId = document.getElementById("dropdown").value;
             const label = document.getElementById("label").value.trim();
             const fieldType = document.getElementById("field-type").value;
 
@@ -118,7 +118,7 @@
                     "Authorization": "Bearer " + token
                 },
                 body: JSON.stringify({
-                    form: formName,
+                    form: formId,
                     label: label,
                     field_type: fieldType
                 })
@@ -135,10 +135,10 @@
 
         }
 
-        function getFormDetils(formName) {
-            if (!formName) return;
+        function getFormDetils(formid) {
+            if (!formid) return;
 
-            fetch(`${FIELD_API}?form=${formName}`, {
+            fetch(`${FIELD_API}?id=${formid}`, {
                 headers: {
                     "Authorization": "Bearer " + token
                 }

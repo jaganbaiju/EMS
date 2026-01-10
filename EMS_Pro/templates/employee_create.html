@@ -51,7 +51,7 @@
                     // Example: render form names
                     data.forEach(form => {
                         const opt = document.createElement("option");
-                        opt.value = form.name;
+                        opt.value = form.id;
                         opt.textContent = form.name;
                         dynamicForm.appendChild(opt);
                     });
@@ -59,10 +59,10 @@
                 .catch(err => alert(err));
         }
 
-        function getFormDetils(formName) {
-            if (!formName) return;
+        function getFormDetils(formId) {
+            if (!formId) return;
 
-            fetch(`${FIELD_API}?form=${formName}`, {
+            fetch(`${FIELD_API}?id=${formId}`, {
                 headers: {
                     "Authorization": "Bearer " + token
                 }
@@ -101,9 +101,10 @@
             let formData = {};
 
             inputs.forEach(input => {
-                formData[input.name] = input.value;
+                formData[input.id] = input.value;
             });
 
+            console.log(formData);
             fetch(API_URL, {
                 method: "POST",
                 headers: {
@@ -117,7 +118,7 @@
             })
                 .then(res => res.json())
                 .then(data => {
-                    alert(data);
+                    console.log(data);
                 })
                 .catch(err => alert(err));
         }

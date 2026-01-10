@@ -96,8 +96,8 @@ class FormFieldView(APIView):
 
     def post(self, request):
 
-        form_name = request.data.get('form')
-        form = DynamicFormModel.objects.get(name=form_name)
+        form_id = request.data.get('form')
+        form = DynamicFormModel.objects.get(id=form_id)
 
         label = request.data.get('label')
         field_type = request.data.get('field_type')
@@ -122,15 +122,15 @@ class FormFieldView(APIView):
     
 
     def get(self, request):
-        form_name = request.query_params.get('form')
+        form_id = request.query_params.get('id')
 
-        if not form_name:
+        if not form_id:
             return Response(
                 {"error": "form name is required"},
                 status=status.HTTP_400_BAD_REQUEST
             )
 
-        form = get_object_or_404(DynamicFormModel, name=form_name)
+        form = get_object_or_404(DynamicFormModel, id=form_id)
         fields = FormFieldModel.objects.filter(form=form).order_by('order')
 
         serializer = FormFieldSerializer(fields, many=True)
@@ -143,16 +143,16 @@ class EmployeeCreateView(APIView):
     def post(self, request):
         data = request.data.copy()
         
-        form_name = data.get('form')
+        form_id = data.get('form')
 
-        if not form_name:
+        if not form_id:
             return Response(
                 {"error": "form is required"},
                 status=status.HTTP_400_BAD_REQUEST
             )
 
         try:
-            form_obj = DynamicFormModel.objects.get(name=form_name)
+            form_obj = DynamicFormModel.objects.get(id=form_id)
         except DynamicFormModel.DoesNotExist:
             return Response(
                 {"error": "Invalid form name"},
@@ -162,19 +162,21 @@ class EmployeeCreateView(APIView):
 
         data['form'] = form_obj
 
-        serializer = EmployeeSerializer(data=data)
+        # serializer = EmployeeSerializer(data=data)
 
-        if serializer.is_valid():
-            serializer.save()
-            return Response(
+        # if serializer.is_valid():
+        #     serializer.save()
+        emp = Employee.objects.create(form=data['form'], data=data['data'])
+        emp.save()
+
+        return Response(
                 {
                     "message": "Employee created successfully",
-                    "data": serializer.data
                 },
                 status=status.HTTP_201_CREATED
             )
 
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        # return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
     def get(self, request):
         user_id = request.query_params.get('id')
