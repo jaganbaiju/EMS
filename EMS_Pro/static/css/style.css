@@ -1,8 +1,9 @@
-/* LOGIN PAGE    */
-*{
+/* LOGIN PAGE */
+* {
     padding: 0;
     margin: 0;
     box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .login-main,
@@ -13,7 +14,6 @@
     display: flex;
     align-items: center;
     justify-content: center;
-
 }
 
 .login-sub {
@@ -32,28 +32,41 @@
     text-align: center;
 }
 
-.login-form-div > input,
-.reg-form-div > input {
+.login-form-div>input,
+.reg-form-div>input {
     width: 60%;
     height: 7vh;
     border-radius: 30px;
     border: none;
     outline: none;
     padding: 0 5vh;
+    margin-bottom: 2vh;
+    font-size: 1rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.login-form-div > button,
-.reg-form-div > button {
-    padding: 1vh 8vh;
+.login-form-div>button,
+.reg-form-div>button {
+    padding: 1.5vh 8vh;
     border-radius: 30px;
     border: none;
     background-color: rgb(247, 218, 168);
     cursor: pointer;
     color: rgb(115, 112, 109);
+    font-size: 1rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.login-form-div>button:hover,
+.reg-form-div>button:hover {
+    background-color: rgb(240, 200, 140);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
 }
 
 /* REGISTER PAGE */
-
 .reg-sub {
     width: 50vw;
     height: fit-content;
@@ -70,45 +83,213 @@
 #err4 {
     display: none;
     color: red;
+    margin-bottom: 1vh;
+    font-size: 0.9rem;
 }
 
-
 /* PROFILE PAGE */
-
 .profile-main {
     height: 100vh;
     width: 100%;
-    background-image: linear-gradient(to bottom, rgb(242, 170, 170), rgb(130, 89, 125));
-    padding: 10vh;
+    background-image: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    padding: 5vh;
+    display: flex;
+    flex-direction: column;
 }
 
 .profile-head {
     margin-bottom: 5vh;
+    text-align: center;
+    padding-bottom: 3vh;
+    border-bottom: 2px solid rgba(130, 89, 125, 0.3);
+}
+
+.profile-head h1 {
+    color: #2c3e50;
+    font-size: 2.5rem;
+    margin-bottom: 1.5vh;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.profile-head h2 {
+    color: #3498db;
+    font-size: 1.8rem;
+    font-weight: 500;
+}
+
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    height: 100%;
+}
+
+.profile-sub1 {
+    flex: 0 0 25%;
+    max-width: 25%;
+    padding: 3vh;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    margin-top: 5vh;
+    height: fit-content;
+}
+
+.profile-sub1>a {
+    text-decoration: none;
+    color: #3498db;
+    display: block;
+    padding: 1.5vh 0;
+    margin-bottom: 1.5vh;
+    font-size: 1.1rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    border-bottom: 1px solid #eee;
+}
+
+.profile-sub1>a:hover {
+    color: #2980b9;
+    transform: translateX(5px);
+    padding-left: 10px;
+}
+
+.profile-sub1>a:last-child {
+    border-bottom: none;
+}
+
+.profile-sub2 {
+    flex: 0 0 70%;
+    max-width: 70%;
+    padding: 5vh;
+    margin-left: 5%;
+}
+
+.prsonal-details-div {
+    background: white;
+    padding: 5vh;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    text-align: center;
 }
 
 .profile-div {
-    width: 20vh;
-    height: 20vh;
-    background-image:  linear-gradient(to bottom, rgb(170, 196, 242), rgb(154, 43, 209));;
+    width: 150px;
+    height: 150px;
+    background: linear-gradient(135deg, #3498db, #8e44ad);
     display: flex;
     align-items: center;
     justify-content: center;
     border-radius: 50%;
-    margin: 3vh 0;
+    margin: 3vh auto;
+    border: 5px solid white;
+    box-shadow: 0 8px 20px rgba(52, 152, 219, 0.3);
 }
 
 .profile-name {
-    font-size: xxx-large;
-    font-weight: bolder;
+    font-size: 4rem;
+    font-weight: bold;
     color: white;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
 }
 
-.profile-sub1 {
-    margin-top: 5vh;
-    line-height: 20px;
+.username {
+    color: #2c3e50;
+    font-size: 2.2rem;
+    margin: 2vh 0;
+    letter-spacing: 1px;
 }
 
-.profile-sub1 > a {
+.email {
+    color: #7f8c8d;
+    font-size: 1.3rem;
+    font-weight: 400;
+    margin-bottom: 3vh;
+}
+
+/* Action Links */
+.profile-main > a {
+    display: inline-block;
+    background: #2ecc71;
+    color: white;
     text-decoration: none;
-    color: white;
+    padding: 1.5vh 4vh;
+    margin: 2vh 1vh;
+    border-radius: 50px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(46, 204, 113, 0.3);
+}
+
+.profile-main > a:hover {
+    background: #27ae60;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(46, 204, 113, 0.4);
+}
+
+.profile-main > a:nth-child(4) {
+    background: #e74c3c;
+    box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
+}
+
+.profile-main > a:nth-child(4):hover {
+    background: #c0392b;
+    box-shadow: 0 6px 20px rgba(231, 76, 60, 0.4);
+}
+
+.profile-main > a:nth-child(5) {
+    background: #f39c12;
+    box-shadow: 0 4px 15px rgba(243, 156, 18, 0.3);
+}
+
+.profile-main > a:nth-child(5):hover {
+    background: #d35400;
+    box-shadow: 0 6px 20px rgba(243, 156, 18, 0.4);
+}
+
+/* Logout link specific style */
+.profile-sub1 > a:first-child {
+    color: #e74c3c;
+    font-weight: 600;
+}
+
+.profile-sub1 > a:first-child:hover {
+    color: #c0392b;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .profile-sub1,
+    .profile-sub2 {
+        flex: 0 0 100%;
+        max-width: 100%;
+        margin-left: 0;
+        margin-bottom: 3vh;
+    }
+    
+    .profile-head h1 {
+        font-size: 2rem;
+    }
+    
+    .profile-head h2 {
+        font-size: 1.5rem;
+    }
+    
+    .profile-main > a {
+        display: block;
+        margin: 1.5vh 0;
+        text-align: center;
+    }
+    
+    .profile-div {
+        width: 120px;
+        height: 120px;
+    }
+    
+    .profile-name {
+        font-size: 3rem;
+    }
+    
+    .username {
+        font-size: 1.8rem;
+    }
 }

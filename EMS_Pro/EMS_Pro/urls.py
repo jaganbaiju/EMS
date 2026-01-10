@@ -31,6 +31,7 @@ urlpatterns = [
     path('set-new-password/', TemplateView.as_view(template_name="change_password.html"), name="change_password"),
     path('create-dynamic-form/', TemplateView.as_view(template_name="dynamic_form.html"), name='dymanicform'),
     path('create-employee/', TemplateView.as_view(template_name="employee_create.html"), name='employee'),
+    path('all-users/', TemplateView.as_view(template_name="userslist.html"), name="all_users"),
 ]
 
 
