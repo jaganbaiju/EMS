@@ -198,10 +198,10 @@ class EmployeeCreateView(APIView):
 class UserView(APIView):
     permission_classes = [IsAuthenticated]
 
-    def delete(self, request, user_id):
-        user = User.objects.get(id=int(user_id))
+    def delete(self, request):
+        user_id = int(request.query_params.get('id'))
+        user = get_object_or_404(User, id = user_id)
         user.delete()
-
         return Response({
             "message": "User deleted successfully"
         }, status=status.HTTP_200_OK)

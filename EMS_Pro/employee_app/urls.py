@@ -11,7 +11,7 @@ urlpatterns = [
     path('form-create/', views.CreateDynamicFormView.as_view()),
     path('form-field/', views.FormFieldView.as_view()),
     path('employee/', views.EmployeeCreateView.as_view()),
-    path('user-delete/<int:user_id>', views.UserView.as_view()),
+    path('user-delete/', views.UserView.as_view()),
 ]
 
 
