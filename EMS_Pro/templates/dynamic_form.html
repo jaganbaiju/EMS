@@ -106,6 +106,17 @@
             const label = document.getElementById("label").value.trim();
             const fieldType = document.getElementById("field-type").value;
 
+            const mainForm = document.getElementById('form');
+            const intputTag = document.createElement('input');
+            const labels = document.createElement('label');
+            const brealTag = document.createElement('br');
+            labels.textContent = label;
+            intputTag.type = fieldType;
+            mainForm.appendChild(labels);
+            mainForm.appendChild(brealTag);
+            mainForm.appendChild(intputTag);
+            mainForm.appendChild(brealTag);
+
             // if (!formId || !label) {
             //     alert("Select form and enter field label");
             //     return;
