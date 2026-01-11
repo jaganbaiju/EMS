@@ -20,7 +20,7 @@
             </h1>
             <h2>User Profile</h2>
         </div>
-        
+
         <div class="profile-sub2 col-md-9">
             <div class="prsonal-details-div">
                 <div class="profile-div">
@@ -49,6 +49,7 @@
         <a href="{% url 'all_users' %}">all users</a><br>
     </div>
 
+    <script src="{% static 'js/auth.js' %}"></script>
     <script>
         // check access
         if (!localStorage.getItem("access")) {
@@ -56,16 +57,14 @@
             const loginUrl = "{% url 'login' %}";
             window.location.href = loginUrl;
         }
-
-
-
-        fetch("http://127.0.0.1:8000/api/profile/", {
-            headers: {
-                "Authorization": "Bearer " + localStorage.getItem("access")
-            }
-        })
-            .then(res => res.json())
+        
+        authFetch("http://127.0.0.1:8000/api/profile/")
+            .then(res => {
+                if (!res) return;
+                return res.json();
+            })
             .then(data => {
+                if (!data) return;
                 document.getElementsByClassName('username')[0].innerHTML = data.username.toUpperCase();
                 document.getElementsByClassName('email')[0].innerHTML = data.email;
                 document.getElementsByClassName('profile-name')[0].innerHTML = data.username[0].toUpperCase();
